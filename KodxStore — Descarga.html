@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KodxStore — publica y descarga apps gratis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14120F;
+    --bg-raised: #1C1914;
+    --bg-card: #201C16;
+    --line: #322C23;
+    --line-soft: #241F19;
+    --text: #F3EEE4;
+    --text-dim: #B4AB9C;
+    --text-faint: #7A7267;
+    --orange: #F2740E;
+    --orange-bright: #FF9138;
+    --orange-dim: #7A3D14;
+    --font-display: 'Space Grotesk', 'Inter', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { max-width: 100%; display: block; }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---- nav ---- */
+  header.nav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: rgba(20, 18, 15, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .brand-mark {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(145deg, var(--orange-bright), var(--orange));
+    position: relative;
+    flex-shrink: 0;
+  }
+  .brand-mark::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 3px;
+    background: var(--bg);
+  }
+  .nav-cta {
+    background: var(--orange);
+    color: #1A0F05;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 9px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .nav-cta:hover { background: var(--orange-bright); }
+
+  /* ---- hero ---- */
+  .hero {
+    padding: 84px 24px 56px;
+    max-width: 1040px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 5vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    margin: 0 0 20px;
+  }
+  .hero p.lede {
+    color: var(--text-dim);
+    font-size: 1.08rem;
+    max-width: 46ch;
+    margin: 0 0 32px;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--orange);
+    color: #1A0F05;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 14px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px solid var(--orange);
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn-primary:hover { background: var(--orange-bright); transform: translateY(-1px); }
+  .btn-primary svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .hero-meta {
+    color: var(--text-faint);
+    font-size: 0.85rem;
+  }
+  .hero-facts {
+    display: flex;
+    gap: 28px;
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .fact-num {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--orange-bright);
+    display: block;
+  }
+  .fact-label {
+    color: var(--text-faint);
+    font-size: 0.82rem;
+  }
+
+  /* hero visual: app grid mock */
+  .hero-visual {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px;
+  }
+  .hero-visual .screen-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .screen-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+  .screen-search {
+    flex: 1;
+    height: 30px;
+    border-radius: 7px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    margin-left: 6px;
+  }
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .app-tile {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: flex-end;
+    padding: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .app-tile::before {
+    content: "";
+    position: absolute;
+    top: 10px; left: 10px;
+    width: 26px; height: 26px;
+    border-radius: 7px;
+    background: var(--tile-color, var(--orange-dim));
+  }
+  .app-tile span {
+    display: block;
+    height: 6px;
+    width: 70%;
+    border-radius: 3px;
+    background: var(--line);
+  }
+  .app-tile.featured { grid-column: span 2; }
+  .app-tile.featured::before { background: linear-gradient(145deg, var(--orange-bright), var(--orange)); }
+
+  /* ---- sections ---- */
+  section { padding: 64px 24px; }
+  .section-head { max-width: 56ch; margin-bottom: 40px; }
+  .section-head h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+  }
+  .section-head p { color: var(--text-dim); margin: 0; }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 26px 22px;
+  }
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--orange-bright);
+  }
+  .feature-icon svg { width: 20px; height: 20px; }
+  .feature-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .feature-card p { color: var(--text-dim); font-size: 0.94rem; margin: 0; }
+
+  /* steps */
+  .steps {
+    background: var(--bg-raised);
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .steps-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .step {
+    padding-left: 20px;
+    border-left: 2px solid var(--orange-dim);
+  }
+  .step .step-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .step p { color: var(--text-dim); font-size: 0.92rem; margin: 0; }
+
+  /* download panel */
+  .download-panel {
+    background: linear-gradient(160deg, var(--bg-card), var(--bg-raised));
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .download-panel h2 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+  .download-panel p { color: var(--text-dim); margin: 0; max-width: 42ch; }
+  .download-info {
+    display: flex;
+    gap: 22px;
+    margin-top: 18px;
+    font-size: 0.83rem;
+    color: var(--text-faint);
+  }
+  .download-info b { color: var(--text); font-weight: 600; }
+
+  footer {
+    border-top: 1px solid var(--line-soft);
+    padding: 32px 24px 40px;
+  }
+  .footer-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--text-faint);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; padding-top: 48px; }
+    .features { grid-template-columns: 1fr; }
+    .steps-list { grid-template-columns: 1fr; }
+    .download-panel { flex-direction: column; align-items: flex-start; }
+    .hero-facts { flex-wrap: wrap; row-gap: 16px; }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--orange-bright);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark"></span>
+      KodxStore
+    </a>
+    <a class="nav-cta" href="#descarga">Descargar</a>
+  </div>
+</header>
+
+<div id="top" class="hero">
+  <div>
+    <h1>Una tienda de apps donde publicar y descargar no cuesta nada.</h1>
+    <p class="lede">KodxStore es un catálogo abierto: cualquiera puede subir una aplicación y cualquiera puede instalarla. Sin anuncios, sin cuentas premium, sin cobros ocultos.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#descarga">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Descargar KodxStore
+      </a>
+      <span class="hero-meta">APK · versión 1.2.0 · Android</span>
+    </div>
+    <div class="hero-facts">
+      <div>
+        <span class="fact-num">0</span>
+        <span class="fact-label">anuncios</span>
+      </div>
+      <div>
+        <span class="fact-num">0</span>
+        <span class="fact-label">costo</span>
+      </div>
+      <div>
+        <span class="fact-num">∞</span>
+        <span class="fact-label">apps que puedes publicar</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual" aria-hidden="true">
+    <div class="screen-head">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <div class="screen-search"></div>
+    </div>
+    <div class="app-grid">
+      <div class="app-tile featured"><span></span></div>
+      <div class="app-tile"><span></span></div>
+      <div class="app-tile"><span></span></div>
+      <div class="app-tile"><span></span></div>
+      <div class="app-tile"><span></span></div>
+      <div class="app-tile"><span></span></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Hecha para compartir, no para vender</h2>
+      <p>KodxStore existe para que desarrolladores independientes lleguen a la gente sin pagar cuotas ni pelear con algoritmos de tiendas cerradas.</p>
+    </div>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        </div>
+        <h3>Publica sin barreras</h3>
+        <p>Cualquier desarrollador puede subir su aplicación al catálogo, sin cuotas de registro ni procesos de aprobación eternos.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </div>
+        <h3>Sin anuncios, nunca</h3>
+        <p>Ni banners, ni interrupciones, ni ventanas emergentes. Buscas una app, la descargas y listo.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <h3>Descargas directas</h3>
+        <p>Cada aplicación se instala directamente desde su archivo, sin pasos intermedios ni registros obligatorios.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Cómo empezar</h2>
+      <p>Tres pasos para tener KodxStore instalado y listo para explorar.</p>
+    </div>
+    <div class="steps-list">
+      <div class="step">
+        <div class="step-title">Descarga el APK</div>
+        <p>Usa el botón de descarga para obtener el instalador de KodxStore en tu dispositivo Android.</p>
+      </div>
+      <div class="step">
+        <div class="step-title">Permite instalar orígenes desconocidos</div>
+        <p>Android puede pedirte autorizar la instalación desde el navegador o gestor de archivos que uses.</p>
+      </div>
+      <div class="step">
+        <div class="step-title">Abre y explora</div>
+        <p>Entra a KodxStore, busca aplicaciones o publica la tuya para que otros la descarguen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="descarga">
+  <div class="wrap">
+    <div class="download-panel">
+      <div>
+        <h2>Descarga KodxStore ahora</h2>
+        <p>Instalador oficial en formato APK, listo para Android.</p>
+        <div class="download-info">
+          <span><b>Versión</b> 1.2.0</span>
+          <span><b>Formato</b> APK</span>
+          <span><b>Precio</b> Gratis</span>
+        </div>
+      </div>
+      <a class="btn-primary" href="https://huggingface.co/tntprojects/archivos/resolve/main/KodxStore_1.2.0.apk" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Descargar KodxStore_1.2.0.apk
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span>KodxStore — publica y descarga apps, sin anuncios.</span>
+    <span>Versión 1.2.0</span>
+  </div>
+</footer>
+
+</body>
+</html>
